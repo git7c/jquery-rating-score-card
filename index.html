@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Rating Score Card - Webtutorials.ME</title>
+    <!--Jquery CDN-->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+    body{
+        font-family: sans-serif;
+        padding: 0;
+        margin: 0;
+        background: #f5f5f5;
+    }
+    h1,h2{
+        text-align: center;
+    }
+    .rating-container,.card-container{
+        margin: 5px auto;
+        max-width: 600px;
+        background-color: #FFF;
+        padding: 10px;
+        border: 1px solid rgba(0,0,0,.1);
+    }
+    
+    .star_pgs{
+        background: #cccccc;
+        margin: 5px 0;
+        overflow: hidden;
+        height: 5px;
+    }
+    .star_pgb{
+        height: 5px;
+        width:0;
+    }
+    ._3_star,._4_star,._5_star{
+        background: #009f4d;
+        
+    }
+    ._2_star{
+        background: #ffc845;
+    }
+    ._1_star{
+        background: #ff4c4c;
+    }
+    .star_count{
+        display: flex;
+        font-size: 14px;
+    }
+    .star_count span:first-child{
+        flex: 1;
+        color: #000000;
+    }
+    .star_count span:last-child{
+        color: #888888;
+    }
+    .rating-wrapper{
+        max-width: 100px;
+
+    }
+    .star_input_num{
+        width: 100%;
+    }
+    #sub-btn{
+        background-color: #0079c1;
+        border: 1px solid rgba(0,0,0,.1);
+        color: #FFF;
+        text-transform: uppercase;
+        padding:5px 10px;
+        font-size: 14px;
+        cursor: pointer;
+        outline: none;
+        width: 100%;
+
+    }
+    table{
+        border-collapse: collapse;
+        
+    }
+    table td{
+        border: 1px solid #cccccc;
+        padding: 5px;
+    }
+    input[type='number']{
+        padding: 10px;
+        border: 1px solid rgba(0,0,0,.2);
+    }
+    </style>
+</head>
+
+<body>
+
+    <div class="main-container">
+        <h1><span style="color: #2ecc71;">Webtutorials</span>.ME</h1>
+        <!-- rating controller -->
+        <div class="rating-container">
+            <h2>Rating controller</h2>
+            <table>
+                <tr>
+                    <td>5 ★</td>
+                    <td><input type="number" min="0" value="0" id="_5star_num" class="star_input_num"></td>
+                </tr>
+                <tr>
+                    <td>4 ★</td>
+                    <td><input type="number" min="0" value="0" id="_4star_num" class="star_input_num"></td>
+                </tr>
+                <tr>
+                    <td>3 ★</td>
+                    <td><input type="number" min="0" value="0" id="_3star_num" class="star_input_num"></td>
+                </tr>
+                <tr>
+                    <td>2 ★</td>
+                    <td><input type="number" min="0" value="0" id="_2star_num" class="star_input_num"></td>
+                </tr>
+                <tr>
+                    <td>1 ★</td>
+                    <td><input type="number" min="0" value="0" id="_1star_num" class="star_input_num"></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="button" value="Check" id="sub-btn"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card-container">
+            <div class="score-card">
+                <div class="rating-avg">
+                    <h2>Rating scorecard</h2>
+                    <!-- average rating-->
+                    <h2 id="rating-avg">0</h2>
+                </div>
+                <div class="rating-gph">
+                    <div class="star_count">
+                        <span>5★</span>
+                        <span class="_5_star_num">0</span>
+                    </div>
+                    <div class="star_pgs">
+                        <div class="_5_star star_pgb"></div>
+                    </div>
+                    <div class="star_count">
+                        <span>4★</span>
+                        <span class="_4_star_num">0</span>
+                    </div>
+                    <div class="star_pgs">
+                        <div class="_4_star star_pgb"></div>
+                    </div>
+                    <div class="star_count">
+                        <span>3★</span>
+                        <span class="_3_star_num">0</span>
+                    </div>
+                    <div class="star_pgs">
+                        <div class="_3_star star_pgb"></div>
+                    </div>
+                    <div class="star_count">
+                        <span>2★</span>
+                        <span class="_2_star_num">0</span>
+                    </div>
+                    <div class="star_pgs">
+                        <div class="_2_star star_pgb"></div>
+                    </div>
+                    <div class="star_count">
+                        <span>1★</span>
+                        <span class="_1_star_num">0</span>
+                    </div>
+                    <div class="star_pgs">
+                        <div class="_1_star star_pgb"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+
+            function action_rating() {
+
+                var _5star = Math.floor($('#_5star_num').val());
+                var _4star = Math.floor($('#_4star_num').val());
+                var _3star = Math.floor($('#_3star_num').val());
+                var _2star = Math.floor($('#_2star_num').val());
+                var _1star = Math.floor($('#_1star_num').val());
+
+                var maxVal = Math.max(_5star, _4star, _3star, _2star, _1star);
+
+                //get progress bar width in percentage
+                var _5star_wd = _5star * 100 / maxVal;
+                var _4star_wd = _4star * 100 / maxVal;
+                var _3star_wd = _3star * 100 / maxVal;
+                var _2star_wd = _2star * 100 / maxVal;
+                var _1star_wd = _1star * 100 / maxVal;
+
+                // set progress bar width in percentage
+                $('._5_star').width(_5star_wd + '%');
+                $('._4_star').width(_4star_wd + '%');
+                $('._3_star').width(_3star_wd + '%');
+                $('._2_star').width(_2star_wd + '%');
+                $('._1_star').width(_1star_wd + '%');
+
+                // set total star rating numbers
+                $('._5_star_num').text(_5star);
+                $('._4_star_num').text(_4star);
+                $('._3_star_num').text(_3star);
+                $('._2_star_num').text(_2star);
+                $('._1_star_num').text(_1star);
+
+                // average rating 
+                var avg_rating = (5 * _5star + 4 * _4star + 3 * _3star + 2 * _2star + 1 * _1star) / (_5star + _4star + _3star + _2star + _1star);
+
+                if (!isNaN(avg_rating)) {
+                    $('#rating-avg').text(avg_rating.toFixed(1));
+                }
+
+            }
+            // if check button clicked
+            $('#sub-btn').click(function() {
+                action_rating();
+            });
+        });
+    </script>
+</body>
+
+</html>
